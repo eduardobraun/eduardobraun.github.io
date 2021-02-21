@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title></title>
+
+      
+      
+
+      <!-- CSS -->
+      
+      <link rel="stylesheet" href="https://the.unsigned.one/book.css">
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="menu">
+            
+            
+            <nav role="navigation">
+                <ul>
+                    
+                        
+                        
+                            
+                            <li >
+                                
+                                <a href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;frontpage&#x2F;">
+                                    <strong>1.</strong>
+                                    News
+                                </a>
+                                
+                            </li>
+                        
+                            
+                            <li >
+                                
+                                <a href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;whoami&#x2F;">
+                                    <strong>2.</strong>
+                                    whoami
+                                </a>
+                                
+                            </li>
+                        
+                            
+                            <li >
+                                
+                                <a href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;wasm&#x2F;">
+                                    <strong>3.</strong>
+                                    WebAssembly
+                                </a>
+                                
+                                    <ul>
+                                        
+                                            <li class="active">
+                                                <a href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;wasm&#x2F;wasmer-intro&#x2F;">
+                                                    <strong>3.1.</strong>
+                                                    Wasmer Introduction
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                        
+                    
+                </ul>
+            </nav>
+            
+            
+        </div>
+
+        <div class="page">
+            <div class="page__header">
+                <div class="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
+                <span class="search-icon">🔎</span>
+                
+            </div>
+
+            <div class="page__content">
+                
+                <div class="search-container">
+                    <input id="search" type="search" placeholder="Search..">
+                    <div class="search-results">
+                        <div class="search-results__header"></div>
+                        <ul class="search-results__items"></ul>
+                    </div>
+                </div>
+                
+                <div class="book-content">
+                    
+    <h1>Wasmer Introduction</h1>
+    <p><a href="https://wasmer.io/">Wasmer</a> is a <code>WASM</code> runtime coded in <code>Rust</code>, so it is
+really easy to embed the runtime inside you own <code>Rust</code> programs.
+The library is great, but its website and <a href="https://docs.wasmer.io/">docs</a> seems
+to be targeting its use as a CLI tool and not as a library.</p>
+<p>If you dig a little bit you will find a link to the <a href="https://docs.rs/wasmer-runtime/0.17.1/wasmer_runtime/">wasmer-runtime
+docs</a>, which is good to
+look at documentation of specific components of the library, but it is far from
+an introduction to its features.</p>
+<p>To really see what the <code>Wasmer</code> is about we must dive into the
+<a href="https://github.com/wasmerio/wasmer/tree/master/examples">examples</a>.</p>
+<p>Trying to make sense of various examples may be a little time consuming, and
+that is where this post series comes in, giving an easy to follow introduction
+to using the <code>Wasmer</code> library and to <code>WASM</code> in general.</p>
+<h1 id="wasmer-basics">Wasmer Basics</h1>
+<p>We can summarize most of the examples in 5 steps:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-rust" data-lang="rust"><span style="color:#65737e;">// 1. Get the WASM code
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> wasm_bytes = </span><span style="color:#96b5b4;">get_wasm_bytes</span><span style="color:#c0c5ce;">();
+
+</span><span style="color:#65737e;">// 2. Setup the runtime
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> compiler_config = Cranelift::default();
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> engine = </span><span style="color:#d08770;">JIT</span><span style="color:#c0c5ce;">::new(compiler_config).</span><span style="color:#96b5b4;">engine</span><span style="color:#c0c5ce;">();
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> store = Store::new(&amp;engine);
+
+</span><span style="color:#65737e;">// 3. Compile the WASM code into a Module
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> module = Module::new(&amp;store, wasm_bytes)?;
+
+</span><span style="color:#65737e;">// 4. Create an instance of the Module
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> import_object = imports! {};
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> instance = Instance::new(&amp;module, &amp;import_object)?;
+
+</span><span style="color:#65737e;">// 5. Get the exported function reference and call it
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> sum = instance.exports.</span><span style="color:#96b5b4;">get_function</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">sum</span><span style="color:#c0c5ce;">&quot;)?;
+</span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> results = sum.</span><span style="color:#96b5b4;">call</span><span style="color:#c0c5ce;">(&amp;[Value::</span><span style="color:#d08770;">I32</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">), Value::</span><span style="color:#d08770;">I32</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">)])?;
+</span></code></pre><h2 id="step-1-the-wasm-code">Step 1: The WASM Code</h2>
+<p>First we need to get our <code>WASM</code> code. The code is just a sequence of bytes, in
+the <code>Wasmer</code> example it is inlined into the code, but you can read it at
+runtime from anywhere.</p>
+<h2 id="step-2-wasm-runtime">Step 2: WASM Runtime</h2>
+<p>To run this code we first need to compile it, we will use the just-in-time
+(JIT) engine from to build our code at runtime, there are other options but I
+will not explore them here.</p>
+<h2 id="step-3-the-module">Step 3: The Module</h2>
+<p>The chosen engine is used to build the <code>WASM</code> code into a <code>Module</code>.</p>
+<h2 id="step-4-instantiation">Step 4: Instantiation</h2>
+<p>This <code>Module</code> can be instantiated.</p>
+<h2 id="step-5-use-the-instance">Step 5: Use The Instance</h2>
+<p>Finally, we can get references to the <code>WASM</code> module exported data, this allows
+us to call functions that will be run inside the <code>Wasmer</code> sandboxed
+environment.</p>
+
+
+                </div>
+            </div>
+
+            <div class="prev-link">
+                
+    
+        
+        
+        <a class="previous" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;wasm&#x2F;"><</a>
+    
+
+            </div>
+
+            <div class="next-link">
+                
+    
+        
+        
+        
+        
+            
+            
+            
+        
+            
+            
+            
+        
+            
+            
+            
+                
+                    
+                
+            
+        
+    
+
+            </div>
+        </div>
+
+        
+            
+            <script type="text/javascript" src="https://the.unsigned.one/elasticlunr.min.js"></script>
+            <script type="text/javascript" src="https://the.unsigned.one/search_index.en.js"></script>
+            
+            <script type="text/javascript" src="https://the.unsigned.one/book.js"></script>
+        
+    </body>
+
+</html>
