@@ -1,19 +1,75 @@
-# The URL the site will be built for
 base_url = "https://the.unsigned.one"
 
-# Whether to automatically compile all Sass files in the sass directory
+theme = "DeepThought"
+
+title = "0x01"
+default_language = "en"
+generate_feed = true
+feed_filename = "rss.xml"
+taxonomies = [
+    { name = "categories", feed = true, paginate_by = 10 },
+    { name = "tags", fees = true, paginate_by = 10 },
+]
 compile_sass = true
-
-# Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
+ignored_content = []
+extra_syntaxes = []
 
-theme = "book"
+[link_checker]
+skip_prefixes = ["http://[2001:db8::]/"]
+skip_anchor_prefixes = ["https://caniuse.com/"]
+
+[slugify]
+paths = "on"
+taxonomies = "on"
+anchors = "on"
+
+[translations]
 
 [markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
-highlight_theme = "base16-ocean-dark"
+Highlight_theme = "gruvbox-dark"
 
 [extra]
-# Put all your custom variables here
+katex.enabled = true
+katex.auto_render = true
+navbar_items = [
+ { code = "en", nav_items = [
+  { url = "$BASE_URL/", name = "Home" },
+  { url = "$BASE_URL/whoami", name = "whoami" },
+  { url = "$BASE_URL/posts", name = "Posts" },
+  { url = "$BASE_URL/tags", name = "Tags" },
+  { url = "$BASE_URL/categories", name = "Categories" },
+ ]},
+]
+
+# Add links to favicon, you can use https://realfavicongenerator.net/ to generate favicon for your site
+# [extra.favicon]
+# favicon_16x16 = "/icons/favicon-16x16.png"
+# favicon_32x32 = "/icons/favicon-32x32.png"
+# apple_touch_icon = "/icons/apple-touch-icon.png"
+# safari_pinned_tab = "/icons/safari-pinned-tab.svg"
+# webmanifest = "/icons/site.webmanifest"
+
+# Author details
+[extra.author]
+name = "Eduardo Braun"
+avatar = "/images/avatar.png"
+
+# Social links
+[extra.social]
+email = "eduardotbraun@gmail.com"
+github = "eduardobraun"
+
+
+# To add google analytics
+# [extra.analytics]
+# google = "<your_gtag>"
+
+# To add disqus comments
+# [extra.commenting]
+# disqus = "<your_disqus_shortname>"
+
+# To enable mapbox maps
+# [extra.mapbox]
+# access_token = "<your_access_token>"

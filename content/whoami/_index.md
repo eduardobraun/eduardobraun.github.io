@@ -11,6 +11,3 @@ projects and other things of my intrest.
 I have a Bachelor's degree in `Computer Engineering` from
 [UFSM](https://www.ufsm.br/) and 4 years of experience working as a `Software
 Developer`.
-
-Currently I'm enrolled in the `Computer Sciences` master's program at
-[UFSM](https://www.ufsm.br/).

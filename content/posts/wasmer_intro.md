@@ -1,7 +1,11 @@
 +++
-weight = 1
-sort_by = "weight"
 title = "Wasmer Introduction"
+date = 2020-08-06
+draft = true
+
+[taxonomies]
+categories = ["Programming"]
+tags = ["post", "rust", "wasm"]
 +++
 [Wasmer](https://wasmer.io/) is a `WASM` runtime coded in `Rust`, so it is
 really easy to embed the runtime inside you own `Rust` programs.
