@@ -10,7 +10,7 @@ jobs:
       uses: shalzz/zola-deploy-action@v0.13.0
       env:
         PAGES_BRANCH: gh-pages
-        BUILD_FLAGS: --drafts
+        # BUILD_FLAGS: --drafts
         BUILD_THEMES: true
         TOKEN: ${{ secrets.TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
