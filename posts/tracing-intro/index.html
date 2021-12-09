@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <meta content="#ffffff" name="theme-color" />
+  <meta content="#da532c" name="msapplication-TileColor" />
+
+  
+  
+  
+  
+  
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/folio/galleria.folio.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/mapbox-gl@2.1.1/dist/mapbox-gl.min.css" rel="stylesheet" />
+  <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css" rel="stylesheet" />
+  <link href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;deep-thought.css" rel="stylesheet" />
+  <link href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;term.css" rel="stylesheet" />
+
+  <title>
+    
+0x01 | Tracing Introduction
+
+  </title>
+
+  
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/mathtex-script-type.min.js" integrity="sha384-LJ2FmexL77rmGm6SIpxq7y+XA6bkLzGZEgCywzKOZG/ws4va9fUVu2neMjvc3zdv" crossorigin="anonymous"></script>
+  
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+				delimiters: [
+					{left: '$$', right: '$$', display: true},
+					{left: '$', right: '$', display: false},
+					{left: '\\(', right: '\\)', display: false},
+					{left: '\\[', right: '\\]', display: true}
+				]
+			});"></script>
+  
+  
+</head>
+
+<body class="has-background-white">
+  <nav aria-label="section navigation" class="navbar is-light" role="navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item is-size-5 has-text-weight-bold" href="https:&#x2F;&#x2F;the.unsigned.one">0x01</a>
+        <a aria-expanded="false" aria-label="menu" class="navbar-burger burger" data-target="navMenu" role="button">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end has-text-centered">
+          
+          
+          
+          <a class="navbar-item has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;">
+            Home
+          </a>
+          
+          <a class="navbar-item has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;posts">
+            Posts
+          </a>
+          
+          <a class="navbar-item has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;tags">
+            Tags
+          </a>
+          
+          <a class="navbar-item has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;categories">
+            Categories
+          </a>
+          
+          <a class="navbar-item has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;whoami">
+            whoami
+          </a>
+          
+          
+          
+          <a class="navbar-item" id="nav-search" title="Search" data-target="#search-modal">
+            <span class="icon">
+              <i class="fas fa-search"></i>
+            </span>
+          </a>
+          <a class="navbar-item" id="dark-mode" title="Switch to dark theme">
+            <span class="icon">
+              <i class="fas fa-adjust"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-8 is-offset-2">
+        <article>
+          <h1 class="title">
+            Tracing Introduction
+          </h1>
+          <p class="subtitle"></p>
+          <div class="columns is-multiline is-gapless">
+            <div class="column is-8">
+              
+<span class="icon-text has-text-grey">
+  <span class="icon">
+    <i class="far fa-calendar-alt"></i>
+  </span>
+  <span><time datetime="2020-08-06">August 06, 2020</time></span>
+</span>
+
+            </div>
+            <div class="column is-4 has-text-right-desktop">
+              
+<span class="icon-text has-text-grey">
+  <span class="icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span>12 min,</span>
+  <span class="icon">
+    <i class="fas fa-pencil-alt"></i>
+  </span>
+  <span>2253 words</span>
+</span>
+
+            </div>
+            <div class="column">
+              
+              
+<p>
+  Categories:
+  
+  <a class="has-text-info-dark has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;categories&#x2F;programming&#x2F;">
+    <span class="icon-text">
+      <span class="icon">
+        <i class="fas fa-cube"></i>
+      </span>
+      <span>Programming</span>
+    </span>
+  </a>
+  
+</p>
+
+              
+            </div>
+            <div class="column has-text-right-desktop">
+              
+              
+<p>
+  Tags:
+  
+  <a class="has-text-info-dark has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;tags&#x2F;post&#x2F;">
+    <span class="icon-text">
+      <span class="icon">
+        <i class="fas fa-tag"></i>
+      </span>
+      <span>post</span>
+    </span>
+  </a>
+  
+  <a class="has-text-info-dark has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;tags&#x2F;rust&#x2F;">
+    <span class="icon-text">
+      <span class="icon">
+        <i class="fas fa-tag"></i>
+      </span>
+      <span>rust</span>
+    </span>
+  </a>
+  
+  <a class="has-text-info-dark has-text-weight-semibold" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;tags&#x2F;tracing&#x2F;">
+    <span class="icon-text">
+      <span class="icon">
+        <i class="fas fa-tag"></i>
+      </span>
+      <span>tracing</span>
+    </span>
+  </a>
+  
+</p>
+
+              
+            </div>
+          </div>
+          <div class="content mt-2">
+            <h1 id="tracing">Tracing</h1>
+<p><a href="https://github.com/tokio-rs/tracing">Tracing</a> is an instrumentation library
+that makes it easy to add traceable spans to your rust code.</p>
+<h1 id="just-print-it">Just Print It</h1>
+<p>The simplest example is to just log your tracing output, that will result in
+the same as using a logging crate, like <a href="https://github.com/slog-rs/slog">slog</a>.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-toml" data-lang="toml"><span style="color:#c0c5ce;">[dependencies]
+</span><span style="color:#bf616a;">tracing </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">0.1</span><span style="color:#c0c5ce;">&quot;
+</span></code></pre><pre style="background-color:#2b303b;">
+<code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span style="color:#c0c5ce;">tracing::info;
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
+    info!(&quot;</span><span style="color:#a3be8c;">hello world</span><span style="color:#c0c5ce;">&quot;);
+}
+</span></code></pre>
+<p>When we run this...</p>
+<pre class="term-container"><span class="term-fgx76">❯</span> cargo run -p just-print-it
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.01s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`</pre>
+<p>Nothing happens.</p>
+<p>But that's easy to solve, if we look at the tracing examples, we will realize
+that we need an subscriber to receive the tracing events.</p>
+<p>Let's add the new dependency</p>
+<pre style="background-color:#2b303b;">
+<code class="language-toml" data-lang="toml"><span style="color:#c0c5ce;">[dependencies]
+</span><span style="color:#bf616a;">tracing </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">0.1</span><span style="color:#c0c5ce;">&quot;
+</span><span style="color:#bf616a;">tracing-subscriber </span><span style="color:#c0c5ce;">= &quot;</span><span style="color:#a3be8c;">0.2</span><span style="color:#c0c5ce;">&quot;
+</span></code></pre>
+<p>Setup the subscriber</p>
+<pre style="background-color:#2b303b;">
+<code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span style="color:#c0c5ce;">tracing::info;
+</span><span style="color:#b48ead;">use</span><span style="color:#c0c5ce;"> tracing_subscriber;
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
+    tracing_subscriber::fmt::init();
+    info!(&quot;</span><span style="color:#a3be8c;">hello world</span><span style="color:#c0c5ce;">&quot;);
+}
+</span></code></pre>
+<p>And now...</p>
+<pre class="term-container"><span class="term-fgx76">❯</span> cargo run -p just-print-it
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.02s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`</pre>
+<p>Still nothing...</p>
+<p>Oh, turns out we need to set the <code>RUST_LOG</code> environment variable to <code>info</code>, by
+default the subscriber is printing only messages with level <code>error</code> and above.</p>
+<pre class="term-container"><span class="term-fgx76">❯</span> RUST_LOG=info cargo run -p just-print-it
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.02s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`
+<span class="term-fg2">Dec 09 09:03:18.860</span> <span class="term-fg32"> INFO</span> just_print_it: hello world</pre>
+<p>Lets add some functions</p>
+<pre style="background-color:#2b303b;">
+<code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span style="color:#c0c5ce;">tracing::{error, info};
+</span><span style="color:#b48ead;">use</span><span style="color:#c0c5ce;"> tracing_subscriber;
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">fn_a </span><span style="color:#c0c5ce;">() {
+    info!(&quot;</span><span style="color:#a3be8c;">hello from fn_a</span><span style="color:#c0c5ce;">&quot;);
+    </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> i in (</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">..</span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">rev</span><span style="color:#c0c5ce;">() {
+        </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> res = </span><span style="color:#96b5b4;">sub_one</span><span style="color:#c0c5ce;">(i);
+        info!(num=i, res, &quot;</span><span style="color:#a3be8c;">{}-1={}</span><span style="color:#c0c5ce;">&quot;, i, res);
+    }
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">sub_one </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">value</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">u8</span><span style="color:#c0c5ce;">) -&gt; </span><span style="color:#b48ead;">u8 </span><span style="color:#c0c5ce;">{
+    info!(&quot;</span><span style="color:#a3be8c;">hello from sub_one</span><span style="color:#c0c5ce;">&quot;);
+    </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> value.</span><span style="color:#96b5b4;">checked_sub</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {
+        Some(i) =&gt; i,
+        None =&gt; {
+            error!(&quot;</span><span style="color:#a3be8c;">subtraction failed!</span><span style="color:#c0c5ce;">&quot;);
+            </span><span style="color:#d08770;">0
+        </span><span style="color:#c0c5ce;">},
+    }
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
+    tracing_subscriber::fmt::init();
+    info!(&quot;</span><span style="color:#a3be8c;">hello from main</span><span style="color:#c0c5ce;">&quot;);
+    </span><span style="color:#96b5b4;">fn_a</span><span style="color:#c0c5ce;">();
+}
+</span></code></pre><pre class="term-container"><span class="term-fgx76">❯</span> RUST_LOG=info cargo run -p just-print-it
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.02s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: hello from main
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: hello from fn_a
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: 2-1=1 num=2 res=1
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: 1-1=0 num=1 res=0
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg31">ERROR</span> just_print_it: subtraction failed!
+<span class="term-fg2">Dec 09 09:05:32.934</span> <span class="term-fg32"> INFO</span> just_print_it: 0-1=0 num=0 res=0</pre>
+<p>Using <code>tracing::instrument</code></p>
+<pre style="background-color:#2b303b;">
+<code class="language-rust" data-lang="rust"><span style="color:#b48ead;">use </span><span style="color:#c0c5ce;">tracing::{error, info};
+</span><span style="color:#b48ead;">use</span><span style="color:#c0c5ce;"> tracing_subscriber;
+
+#[</span><span style="color:#bf616a;">tracing</span><span style="color:#c0c5ce;">::</span><span style="color:#bf616a;">instrument</span><span style="color:#c0c5ce;">]
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">fn_a </span><span style="color:#c0c5ce;">() {
+    info!(&quot;</span><span style="color:#a3be8c;">hello from fn_a</span><span style="color:#c0c5ce;">&quot;);
+    </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> i in (</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">..</span><span style="color:#d08770;">3</span><span style="color:#c0c5ce;">).</span><span style="color:#96b5b4;">rev</span><span style="color:#c0c5ce;">() {
+        </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> res = </span><span style="color:#96b5b4;">sub_one</span><span style="color:#c0c5ce;">(i);
+        info!(num=i, res, &quot;</span><span style="color:#a3be8c;">{}-1={}</span><span style="color:#c0c5ce;">&quot;, i, res);
+    }
+}
+
+#[</span><span style="color:#bf616a;">tracing</span><span style="color:#c0c5ce;">::</span><span style="color:#bf616a;">instrument</span><span style="color:#c0c5ce;">]
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">sub_one </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">value</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">u8</span><span style="color:#c0c5ce;">) -&gt; </span><span style="color:#b48ead;">u8 </span><span style="color:#c0c5ce;">{
+    info!(&quot;</span><span style="color:#a3be8c;">hello from sub_one</span><span style="color:#c0c5ce;">&quot;);
+    </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> value.</span><span style="color:#96b5b4;">checked_sub</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {
+        Some(i) =&gt; i,
+        None =&gt; {
+            error!(&quot;</span><span style="color:#a3be8c;">subtraction failed!</span><span style="color:#c0c5ce;">&quot;);
+            </span><span style="color:#d08770;">0
+        </span><span style="color:#c0c5ce;">},
+    }
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
+    tracing_subscriber::fmt::init();
+    info!(&quot;</span><span style="color:#a3be8c;">hello from main</span><span style="color:#c0c5ce;">&quot;);
+    </span><span style="color:#96b5b4;">fn_a</span><span style="color:#c0c5ce;">();
+}
+</span></code></pre><pre class="term-container"><span class="term-fgx76">❯</span> RUST_LOG=info cargo run -p just-print-it
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.02s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg32"> INFO</span> just_print_it: hello from main
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: hello from fn_a
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=2<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 2-1=1 num=2 res=1
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=1<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 1-1=0 num=1 res=0
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=0<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:07:08.406</span> <span class="term-fg31">ERROR</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=0<span class="term-fg1">}</span>: just_print_it: subtraction failed!
+<span class="term-fg2">Dec 09 09:07:08.407</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 0-1=0 num=0 res=0</pre>
+<pre class="term-container"><span class="term-fgx76">❯</span> RUST_LOG=info cargo run -p just-print-it
+<span class="term-fg32 term-fg1">   Compiling</span> just-print-it v0.1.0 (&#47;home&#47;peer&#47;Development&#47;rust&#47;tracing-the-tracer&#47;just-print-it)
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.98s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`
+<span class="term-fg2">Dec 09 09:08:47.666</span> <span class="term-fg32"> INFO</span> just_print_it: hello from main
+<span class="term-fg2">Dec 09 09:08:47.666</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: hello from fn_a
+<span class="term-fg2">Dec 09 09:08:47.666</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=2 secret=&quot;some secret&quot;<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:08:47.667</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 2-1=1 num=2 res=1
+<span class="term-fg2">Dec 09 09:08:47.667</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=1 secret=&quot;some secret&quot;<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:08:47.667</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 1-1=0 num=1 res=0
+<span class="term-fg2">Dec 09 09:08:47.667</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=0 secret=&quot;some secret&quot;<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:08:47.667</span> <span class="term-fg31">ERROR</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=0 secret=&quot;some secret&quot;<span class="term-fg1">}</span>: just_print_it: subtraction failed!
+<span class="term-fg2">Dec 09 09:08:47.667</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 0-1=0 num=0 res=0</pre>
+<pre class="term-container"><span class="term-fgx76">❯</span> RUST_LOG=info cargo run -p just-print-it
+<span class="term-fg32 term-fg1">   Compiling</span> just-print-it v0.1.0 (&#47;home&#47;peer&#47;Development&#47;rust&#47;tracing-the-tracer&#47;just-print-it)
+<span class="term-fg33 term-fg1">warning</span><span class="term-fg1">: unused variable: `secret`</span>
+  <span class="term-fgx12 term-fg1">--&gt; </span>just-print-it&#47;src&#47;main.rs:16:24
+   <span class="term-fgx12 term-fg1">|</span>
+<span class="term-fgx12 term-fg1">16</span> <span class="term-fgx12 term-fg1">| </span>fn sub_one (value: u8, secret: &amp;str) -&gt; u8 {
+   <span class="term-fgx12 term-fg1">| </span>                       <span class="term-fg33 term-fg1">^^^^^^</span> <span class="term-fg33 term-fg1">help: if this is intentional, prefix it with an underscore: `_secret`</span>
+   <span class="term-fgx12 term-fg1">|</span>
+   <span class="term-fgx12 term-fg1">= </span><span class="term-fg1">note</span>: `#[warn(unused_variables)]` on by default
+&nbsp;
+<span class="term-fg33 term-fg1">warning</span><span class="term-fg1">:</span> `just-print-it` (bin &quot;just-print-it&quot;) generated 1 warning
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.97s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`
+<span class="term-fg2">Dec 09 09:09:32.513</span> <span class="term-fg32"> INFO</span> just_print_it: hello from main
+<span class="term-fg2">Dec 09 09:09:32.514</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: hello from fn_a
+<span class="term-fg2">Dec 09 09:09:32.514</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=2<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:09:32.514</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 2-1=1 num=2 res=1
+<span class="term-fg2">Dec 09 09:09:32.514</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=1<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:09:32.515</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 1-1=0 num=1 res=0
+<span class="term-fg2">Dec 09 09:09:32.515</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=0<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:09:32.515</span> <span class="term-fg31">ERROR</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">sub_one{</span>value=0<span class="term-fg1">}</span>: just_print_it: subtraction failed!
+<span class="term-fg2">Dec 09 09:09:32.515</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 0-1=0 num=0 res=0</pre>
+<pre class="term-container"><span class="term-fgx76">❯</span> RUST_LOG=info cargo run -p just-print-it
+<span class="term-fg32 term-fg1">    Finished</span> dev [unoptimized + debuginfo] target(s) in 0.02s
+<span class="term-fg32 term-fg1">     Running</span> `target&#47;debug&#47;just-print-it`
+<span class="term-fg2">Dec 09 09:11:39.232</span> <span class="term-fg32"> INFO</span> just_print_it: hello from main
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: hello from fn_a
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">decrement{</span>value=2 secret=*******<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 2-1=1 num=2 res=1
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">decrement{</span>value=1 secret=*******<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 1-1=0 num=1 res=0
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">decrement{</span>value=0 secret=*******<span class="term-fg1">}</span>: just_print_it: hello from sub_one
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg31">ERROR</span> <span class="term-fg1">fn_a</span>:<span class="term-fg1">decrement{</span>value=0 secret=*******<span class="term-fg1">}</span>: just_print_it: subtraction failed!
+<span class="term-fg2">Dec 09 09:11:39.233</span> <span class="term-fg32"> INFO</span> <span class="term-fg1">fn_a</span>: just_print_it: 0-1=0 num=0 res=0</pre>
+<p>{% term() %}
+{% end %}</p>
+<h1 id="process-tracing">Process Tracing</h1>
+<h1 id="distributed-tracing">Distributed Tracing</h1>
+<h1 id="all-togheter">All Togheter</h1>
+
+          </div>
+        </article>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+
+  
+  <section class="modal" id="search-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Search</p>
+      </header>
+      <section class="modal-card-body">
+        <div class="field mb-2">
+          <div class="control">
+            <input class="input" id="search" placeholder="Search this website." type="search" />
+          </div>
+        </div>
+        <div class="search-results">
+          <div class="search-results__items"></div>
+        </div>
+      </section>
+    </div>
+    <button aria-label="close" class="modal-close is-large"></button>
+  </section>
+  
+
+
+  
+
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <nav class="level">
+           
+          <div class="level-item has-text-centered">
+            <a class="button is-black is-outlined" href="https:&#x2F;&#x2F;the.unsigned.one&#x2F;posts&#x2F;wasmer-intro&#x2F;">
+              Wasmer Introduction<span class="icon ml-2">
+                <i class="fas fa-arrow-circle-right"></i>
+              </span>
+            </a>
+          </div>
+            
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+  
+
+
+
+  <!-- <footer class="footer py-4"> -->
+  <!--   <div class="content has-text-centered"> -->
+  <!--     <p> -->
+  <!--       Powered by -->
+  <!--       <span class="icon-text"> -->
+  <!--         <span class="icon"> -->
+  <!--           <i class="fas fa-power-off"></i> -->
+  <!--         </span> -->
+  <!--         <span>zola</span> -->
+  <!--       </span> -->
+  <!--     </p> -->
+  <!--   </div> -->
+  <!-- </footer> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/galleria.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@8.9.2/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.xkcd@1.1.13/dist/chart.xkcd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mapbox-gl@2.1.1/dist/mapbox-gl.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/galleria/1.6.1/themes/folio/galleria.folio.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"></script>
+  <script src="https:&#x2F;&#x2F;the.unsigned.one&#x2F;search_index.en.js"></script>
+  <script src="https:&#x2F;&#x2F;the.unsigned.one&#x2F;js&#x2F;site.js"></script>
+
+  
+
+
+
+
+</body>
+
+</html>

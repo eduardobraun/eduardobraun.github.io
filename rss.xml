@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>0x01</title>
+        <link>https://the.unsigned.one</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://the.unsigned.one/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Thu, 06 Aug 2020 00:00:00 +0000</lastBuildDate>
+        <item>
+            <title>Tracing Introduction</title>
+            <pubDate>Thu, 06 Aug 2020 00:00:00 +0000</pubDate>
+            <link>https://the.unsigned.one/posts/tracing-intro/</link>
+            <guid>https://the.unsigned.one/posts/tracing-intro/</guid>
+            <description>&lt;h1 id=&quot;tracing&quot;&gt;Tracing&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;tokio-rs&#x2F;tracing&quot;&gt;Tracing&lt;&#x2F;a&gt; is an instrumentation library
+that makes it easy to add traceable spans to your rust code.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;just-print-it&quot;&gt;Just Print It&lt;&#x2F;h1&gt;
+&lt;p&gt;The simplest example is to just log your tracing output, that will result in
+the same as using a logging crate, like &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;slog-rs&#x2F;slog&quot;&gt;slog&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-toml&quot; data-lang=&quot;toml&quot;&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;[dependencies]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;tracing &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;= &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;0.1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;tracing::info;
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello world&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;When we run this...&lt;&#x2F;p&gt;
+&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.01s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`&lt;&#x2F;pre&gt;
+&lt;p&gt;Nothing happens.&lt;&#x2F;p&gt;
+&lt;p&gt;But that&#x27;s easy to solve, if we look at the tracing examples, we will realize
+that we need an subscriber to receive the tracing events.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s add the new dependency&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-toml&quot; data-lang=&quot;toml&quot;&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;[dependencies]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;tracing &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;= &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;0.1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;tracing-subscriber &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;= &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;0.2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Setup the subscriber&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;tracing::info;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; tracing_subscriber;
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+    tracing_subscriber::fmt::init();
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello world&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And now...&lt;&#x2F;p&gt;
+&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.02s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`&lt;&#x2F;pre&gt;
+&lt;p&gt;Still nothing...&lt;&#x2F;p&gt;
+&lt;p&gt;Oh, turns out we need to set the &lt;code&gt;RUST_LOG&lt;&#x2F;code&gt; environment variable to &lt;code&gt;info&lt;&#x2F;code&gt;, by
+default the subscriber is printing only messages with level &lt;code&gt;error&lt;&#x2F;code&gt; and above.&lt;&#x2F;p&gt;
+&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; RUST_LOG=info cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.02s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:03:18.860&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello world&lt;&#x2F;pre&gt;
+&lt;p&gt;Lets add some functions&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;tracing::{error, info};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; tracing_subscriber;
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;fn_a &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello from fn_a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; i in (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;..&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;rev&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; res = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sub_one&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(i);
+        info!(num=i, res, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{}-1={}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, i, res);
+    }
+}
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;sub_one &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u8&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u8 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;{
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello from sub_one&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;match&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; value.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;checked_sub&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) {
+        Some(i) =&amp;gt; i,
+        None =&amp;gt; {
+            error!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;subtraction failed!&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0
+        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;},
+    }
+}
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+    tracing_subscriber::fmt::init();
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello from main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;fn_a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;();
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; RUST_LOG=info cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.02s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from main
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from fn_a
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: 2-1=1 num=2 res=1
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: 1-1=0 num=1 res=0
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg31&quot;&gt;ERROR&lt;&#x2F;span&gt; just_print_it: subtraction failed!
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:05:32.934&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: 0-1=0 num=0 res=0&lt;&#x2F;pre&gt;
+&lt;p&gt;Using &lt;code&gt;tracing::instrument&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;tracing::{error, info};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; tracing_subscriber;
+
+#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;tracing&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;instrument&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;fn_a &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello from fn_a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; i in (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;..&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;rev&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; res = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sub_one&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(i);
+        info!(num=i, res, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{}-1={}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, i, res);
+    }
+}
+
+#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;tracing&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;instrument&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;sub_one &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u8&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u8 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;{
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello from sub_one&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;match&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; value.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;checked_sub&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) {
+        Some(i) =&amp;gt; i,
+        None =&amp;gt; {
+            error!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;subtraction failed!&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0
+        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;},
+    }
+}
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
+    tracing_subscriber::fmt::init();
+    info!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;hello from main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;fn_a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;();
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; RUST_LOG=info cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.02s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from main
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: hello from fn_a
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=2&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 2-1=1 num=2 res=1
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=1&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 1-1=0 num=1 res=0
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=0&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.406&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg31&quot;&gt;ERROR&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=0&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: subtraction failed!
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:07:08.407&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 0-1=0 num=0 res=0&lt;&#x2F;pre&gt;
+&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; RUST_LOG=info cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;   Compiling&lt;&#x2F;span&gt; just-print-it v0.1.0 (&amp;#47;home&amp;#47;peer&amp;#47;Development&amp;#47;rust&amp;#47;tracing-the-tracer&amp;#47;just-print-it)
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.98s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.666&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from main
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.666&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: hello from fn_a
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.666&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=2 secret=&amp;quot;some secret&amp;quot;&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.667&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 2-1=1 num=2 res=1
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.667&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=1 secret=&amp;quot;some secret&amp;quot;&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.667&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 1-1=0 num=1 res=0
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.667&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=0 secret=&amp;quot;some secret&amp;quot;&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.667&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg31&quot;&gt;ERROR&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=0 secret=&amp;quot;some secret&amp;quot;&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: subtraction failed!
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:08:47.667&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 0-1=0 num=0 res=0&lt;&#x2F;pre&gt;
+&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; RUST_LOG=info cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;   Compiling&lt;&#x2F;span&gt; just-print-it v0.1.0 (&amp;#47;home&amp;#47;peer&amp;#47;Development&amp;#47;rust&amp;#47;tracing-the-tracer&amp;#47;just-print-it)
+&lt;span class=&quot;term-fg33 term-fg1&quot;&gt;warning&lt;&#x2F;span&gt;&lt;span class=&quot;term-fg1&quot;&gt;: unused variable: `secret`&lt;&#x2F;span&gt;
+  &lt;span class=&quot;term-fgx12 term-fg1&quot;&gt;--&amp;gt; &lt;&#x2F;span&gt;just-print-it&amp;#47;src&amp;#47;main.rs:16:24
+   &lt;span class=&quot;term-fgx12 term-fg1&quot;&gt;|&lt;&#x2F;span&gt;
+&lt;span class=&quot;term-fgx12 term-fg1&quot;&gt;16&lt;&#x2F;span&gt; &lt;span class=&quot;term-fgx12 term-fg1&quot;&gt;| &lt;&#x2F;span&gt;fn sub_one (value: u8, secret: &amp;amp;str) -&amp;gt; u8 {
+   &lt;span class=&quot;term-fgx12 term-fg1&quot;&gt;| &lt;&#x2F;span&gt;                       &lt;span class=&quot;term-fg33 term-fg1&quot;&gt;^^^^^^&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg33 term-fg1&quot;&gt;help: if this is intentional, prefix it with an underscore: `_secret`&lt;&#x2F;span&gt;
+   &lt;span class=&quot;term-fgx12 term-fg1&quot;&gt;|&lt;&#x2F;span&gt;
+   &lt;span class=&quot;term-fgx12 term-fg1&quot;&gt;= &lt;&#x2F;span&gt;&lt;span class=&quot;term-fg1&quot;&gt;note&lt;&#x2F;span&gt;: `#[warn(unused_variables)]` on by default
+&amp;nbsp;
+&lt;span class=&quot;term-fg33 term-fg1&quot;&gt;warning&lt;&#x2F;span&gt;&lt;span class=&quot;term-fg1&quot;&gt;:&lt;&#x2F;span&gt; `just-print-it` (bin &amp;quot;just-print-it&amp;quot;) generated 1 warning
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.97s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.513&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from main
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.514&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: hello from fn_a
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.514&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=2&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.514&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 2-1=1 num=2 res=1
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.514&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=1&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.515&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 1-1=0 num=1 res=0
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.515&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=0&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.515&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg31&quot;&gt;ERROR&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;sub_one{&lt;&#x2F;span&gt;value=0&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: subtraction failed!
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:09:32.515&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 0-1=0 num=0 res=0&lt;&#x2F;pre&gt;
+&lt;pre class=&quot;term-container&quot;&gt;&lt;span class=&quot;term-fgx76&quot;&gt;❯&lt;&#x2F;span&gt; RUST_LOG=info cargo run -p just-print-it
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;    Finished&lt;&#x2F;span&gt; dev [unoptimized + debuginfo] target(s) in 0.02s
+&lt;span class=&quot;term-fg32 term-fg1&quot;&gt;     Running&lt;&#x2F;span&gt; `target&amp;#47;debug&amp;#47;just-print-it`
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.232&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; just_print_it: hello from main
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: hello from fn_a
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;decrement{&lt;&#x2F;span&gt;value=2 secret=*******&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 2-1=1 num=2 res=1
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;decrement{&lt;&#x2F;span&gt;value=1 secret=*******&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 1-1=0 num=1 res=0
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;decrement{&lt;&#x2F;span&gt;value=0 secret=*******&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: hello from sub_one
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg31&quot;&gt;ERROR&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;:&lt;span class=&quot;term-fg1&quot;&gt;decrement{&lt;&#x2F;span&gt;value=0 secret=*******&lt;span class=&quot;term-fg1&quot;&gt;}&lt;&#x2F;span&gt;: just_print_it: subtraction failed!
+&lt;span class=&quot;term-fg2&quot;&gt;Dec 09 09:11:39.233&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg32&quot;&gt; INFO&lt;&#x2F;span&gt; &lt;span class=&quot;term-fg1&quot;&gt;fn_a&lt;&#x2F;span&gt;: just_print_it: 0-1=0 num=0 res=0&lt;&#x2F;pre&gt;
+&lt;p&gt;{% term() %}
+{% end %}&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;process-tracing&quot;&gt;Process Tracing&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;distributed-tracing&quot;&gt;Distributed Tracing&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;all-togheter&quot;&gt;All Togheter&lt;&#x2F;h1&gt;
+</description>
+        </item>
+        <item>
+            <title>Wasmer Introduction</title>
+            <pubDate>Thu, 06 Aug 2020 00:00:00 +0000</pubDate>
+            <link>https://the.unsigned.one/posts/wasmer-intro/</link>
+            <guid>https://the.unsigned.one/posts/wasmer-intro/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;wasmer.io&#x2F;&quot;&gt;Wasmer&lt;&#x2F;a&gt; is a &lt;code&gt;WASM&lt;&#x2F;code&gt; runtime coded in &lt;code&gt;Rust&lt;&#x2F;code&gt;, so it is
+really easy to embed the runtime inside you own &lt;code&gt;Rust&lt;&#x2F;code&gt; programs.
+The library is great, but its website and &lt;a href=&quot;https:&#x2F;&#x2F;docs.wasmer.io&#x2F;&quot;&gt;docs&lt;&#x2F;a&gt; seems
+to be targeting its use as a CLI tool and not as a library.&lt;&#x2F;p&gt;
+&lt;p&gt;If you dig a little bit you will find a link to the &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;wasmer-runtime&#x2F;0.17.1&#x2F;wasmer_runtime&#x2F;&quot;&gt;wasmer-runtime
+docs&lt;&#x2F;a&gt;, which is good to
+look at documentation of specific components of the library, but it is far from
+an introduction to its features.&lt;&#x2F;p&gt;
+&lt;p&gt;To really see what the &lt;code&gt;Wasmer&lt;&#x2F;code&gt; is about we must dive into the
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;wasmerio&#x2F;wasmer&#x2F;tree&#x2F;master&#x2F;examples&quot;&gt;examples&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Trying to make sense of various examples may be a little time consuming, and
+that is where this post series comes in, giving an easy to follow introduction
+to using the &lt;code&gt;Wasmer&lt;&#x2F;code&gt; library and to &lt;code&gt;WASM&lt;&#x2F;code&gt; in general.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;wasmer-basics&quot;&gt;Wasmer Basics&lt;&#x2F;h1&gt;
+&lt;p&gt;We can summarize most of the examples in 5 steps:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 1. Get the WASM code
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; wasm_bytes = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;get_wasm_bytes&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;();
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 2. Setup the runtime
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; compiler_config = Cranelift::default();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; engine = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;JIT&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;::new(compiler_config).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;engine&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; store = Store::new(&amp;amp;engine);
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 3. Compile the WASM code into a Module
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; module = Module::new(&amp;amp;store, wasm_bytes)?;
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 4. Create an instance of the Module
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; import_object = imports! {};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; instance = Instance::new(&amp;amp;module, &amp;amp;import_object)?;
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; 5. Get the exported function reference and call it
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; sum = instance.exports.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;get_function&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;)?;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; results = sum.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;call&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;[Value::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;I32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;), Value::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;I32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)])?;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;step-1-the-wasm-code&quot;&gt;Step 1: The WASM Code&lt;&#x2F;h2&gt;
+&lt;p&gt;First we need to get our &lt;code&gt;WASM&lt;&#x2F;code&gt; code. The code is just a sequence of bytes, in
+the &lt;code&gt;Wasmer&lt;&#x2F;code&gt; example it is inlined into the code, but you can read it at
+runtime from anywhere.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;step-2-wasm-runtime&quot;&gt;Step 2: WASM Runtime&lt;&#x2F;h2&gt;
+&lt;p&gt;To run this code we first need to compile it, we will use the just-in-time
+(JIT) engine from to build our code at runtime, there are other options but I
+will not explore them here.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;step-3-the-module&quot;&gt;Step 3: The Module&lt;&#x2F;h2&gt;
+&lt;p&gt;The chosen engine is used to build the &lt;code&gt;WASM&lt;&#x2F;code&gt; code into a &lt;code&gt;Module&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;step-4-instantiation&quot;&gt;Step 4: Instantiation&lt;&#x2F;h2&gt;
+&lt;p&gt;This &lt;code&gt;Module&lt;&#x2F;code&gt; can be instantiated.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;step-5-use-the-instance&quot;&gt;Step 5: Use The Instance&lt;&#x2F;h2&gt;
+&lt;p&gt;Finally, we can get references to the &lt;code&gt;WASM&lt;&#x2F;code&gt; module exported data, this allows
+us to call functions that will be run inside the &lt;code&gt;Wasmer&lt;&#x2F;code&gt; sandboxed
+environment.&lt;&#x2F;p&gt;
+</description>
+        </item>
+    </channel>
+</rss>
